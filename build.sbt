@@ -1,5 +1,5 @@
 import org.scalajs.linker.interface.ModuleSplitStyle
-
+import jsenv.playwright.PWEnv
 lazy val `test-vite` = project.in(file("."))
   .enablePlugins(ScalaJSPlugin) // Enable the Scala.js plugin in this project
   .enablePlugins(ScalablyTypedConverterExternalNpmPlugin)
@@ -22,9 +22,12 @@ lazy val `test-vite` = project.in(file("."))
         .withModuleSplitStyle(ModuleSplitStyle.SmallModulesFor(List("testvite")))
     },
 
+    libraryDependencies += "com.microsoft.playwright" % "playwright" % "1.40.0",
     // Depend on Laminar
     libraryDependencies += "com.raquo" %%% "laminar" % "15.0.1",
+    libraryDependencies += "org.scalameta" %%% "munit" % "0.7.29" % Test,
 
     // Tell ScalablyTyped that we manage `npm install` ourselves
     externalNpm := baseDirectory.value,
+    jsEnv := new PWEnv("chrome")
   )

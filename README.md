@@ -1,4 +1,15 @@
-# Scala.js with sbt, Vite, Laminar and Chart.js
+# Test project to try out the scala-js-env-playwright
+Steps to reproduce:
+1. Clone git@github.com:gmkumar2005/scala-js-env-playwright.git
+2. 'sbt publishLocal' in the scala-js-env-playwright project
+3. Clone git@github.com:gmkumar2005/scalajs-sbt-vite-laminar-chartjs-example.git
+4. `sbt test` in the scalajs-sbt-vite-laminar-chartjs-example project
+
+
+
+
+
+## Scala.js with sbt, Vite, Laminar and Chart.js
 
 This is an example of putting together:
 
