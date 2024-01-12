@@ -1,33 +1,32 @@
-import org.scalajs.linker.interface.ModuleSplitStyle
 import jsenv.playwright.PWEnv
-lazy val `test-vite` = project.in(file("."))
-  .enablePlugins(ScalaJSPlugin) // Enable the Scala.js plugin in this project
+import org.scalajs.linker.interface.ModuleSplitStyle
+import sbt.Test
+
+lazy val `test-vite` = project
+  .in(file("."))
+  .enablePlugins(ScalaJSPlugin)
   .enablePlugins(ScalablyTypedConverterExternalNpmPlugin)
   .settings(
+//    javaOptions += "-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005",
     scalaVersion := "3.3.1",
-    scalacOptions ++= Seq("-encoding", "utf-8", "-deprecation", "-feature"),
-
-    // Tell Scala.js that this is an application with a main method
     scalaJSUseMainModuleInitializer := true,
-
-    /* Configure Scala.js to emit modules in the optimal way to
-     * connect to Vite's incremental reload.
-     * - emit ECMAScript modules
-     * - emit as many small modules as possible for classes in the "testvite" package
-     * - emit as few (large) modules as possible for all other classes
-     *   (in particular, for the standard library)
-     */
     scalaJSLinkerConfig ~= {
       _.withModuleKind(ModuleKind.ESModule)
-        .withModuleSplitStyle(ModuleSplitStyle.SmallModulesFor(List("testvite")))
+        .withModuleSplitStyle(
+          ModuleSplitStyle.SmallModulesFor(List("testvite"))
+        )
     },
-
     libraryDependencies += "com.microsoft.playwright" % "playwright" % "1.40.0",
-    // Depend on Laminar
+    libraryDependencies += "com.microsoft.playwright" % "driver-bundle" % "1.40.0",
     libraryDependencies += "com.raquo" %%% "laminar" % "15.0.1",
-    libraryDependencies += "org.scalameta" %%% "munit" % "0.7.29" % Test,
-
-    // Tell ScalablyTyped that we manage `npm install` ourselves
+    libraryDependencies += "org.scalactic" %%% "scalactic" % "3.2.17",
+    libraryDependencies += "org.scalatest" %%% "scalatest" % "3.2.17" % Test,
     externalNpm := baseDirectory.value,
-    jsEnv := new PWEnv("chrome")
+    Test / fork := false,
+    Test / jsEnv := new PWEnv(
+      browserName = "chrome",
+      headless = true,
+      showLogs = true
+    ),
+    Test / parallelExecution := false
   )
