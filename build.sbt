@@ -1,4 +1,3 @@
-import jsenv.playwright.PWEnv
 import org.scalajs.linker.interface.ModuleSplitStyle
 import sbt.Test
 
